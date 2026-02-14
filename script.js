@@ -1,7 +1,3 @@
-// ===================================
-// PHASE 1: CORE STRUCTURE & NAVIGATION
-// ===================================
-
 // Global variable for current user (will be used in later phases)
 let currentUser = null;
 
@@ -23,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.hash = '#/';
     }
 });
-
 // ===================================
 // Client-Side Routing
 // ===================================
@@ -127,16 +122,7 @@ function handleRouting() {
     document.getElementById(pageId).classList.add('active');
 }
 
-switch(route) {
-    case 'login':
-        pageId = 'login-page';
-        break;
-    case 'register':
-        pageId = 'register-page';
-        break;
-    default:
-        pageId = 'home-page';
-}
+
 if (route === 'login') {
     pageId = 'login-page';
 } else if (route === 'register') {
@@ -144,4 +130,8 @@ if (route === 'login') {
 } else if (route === 'profile') {
     pageId = 'profile-page';
 }
-// ... gets messy!
+page.classList.remove('active'); 
+page.classList.add('active'); 
+
+getComputedStyle(document.querySelector('.page.active')).display
+document.getElementById('home-page').classList.add('active');
