@@ -147,3 +147,96 @@ code {
         transform: translateY(0);
     }
 }
+/* ===================================
+   Role-Based Visibility
+   =================================== */
+body.not-authenticated .role-logged-in {
+    display: none !important;
+}
+
+body.authenticated .role-logged-out {
+    display: none !important;
+}
+
+.role-admin {
+    display: none !important;
+}
+
+body.is-admin .role-admin {
+    display: block !important;
+}
+
+body.is-admin .nav-item.role-admin {
+    display: list-item !important;
+}
+
+/* ===================================
+   Card Components
+   =================================== */
+.welcome-container,
+.form-container,
+.content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.welcome-card,
+.form-card,
+.content-card {
+    background: white;
+    border-radius: 16px;
+    padding: 3rem;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-container {
+    max-width: 500px;
+}
+
+.welcome-card h1 {
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    font-family: var(--font-mono);
+}
+
+.welcome-card .lead {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+}
+
+.feature-list li {
+    padding: 0.75rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--text);
+}
+
+.feature-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: bold;
+}
