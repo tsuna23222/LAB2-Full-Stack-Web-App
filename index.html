@@ -8,7 +8,50 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    
+<body class="not-authenticated">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#/" id="brandName">Full-Stack App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <!-- Logged Out Links -->
+                    <li class="nav-item role-logged-out">
+                        <a class="nav-link" href="#/login">Login</a>
+                    </li>
+                    <li class="nav-item role-logged-out">
+                        <a class="nav-link" href="#/register">Register</a>
+                    </li>
+                    
+                    <!-- Admin Links -->
+                    <li class="nav-item role-admin">
+                        <a class="nav-link" href="#/employees">Employees</a>
+                    </li>
+                    <li class="nav-item role-admin">
+                        <a class="nav-link" href="#/accounts">Accounts</a>
+                    </li>
+                    <li class="nav-item role-admin">
+                        <a class="nav-link" href="#/departments">Departments</a>
+                    </li>
+                    
+                    <!-- Logged In Dropdown -->
+                    <li class="nav-item dropdown role-logged-in">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <span id="usernameDisplay">User</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#/profile">Profile</a></li>
+                            <li><a class="dropdown-item" href="#/requests">My Requests</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </body>
 </html>
