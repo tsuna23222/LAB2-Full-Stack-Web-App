@@ -367,3 +367,272 @@ body.is-admin .nav-item.role-admin {
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
 }
+
+/* ===================================
+   Tables
+   =================================== */
+.table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    background: white;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead {
+    background: var(--dark);
+    color: white;
+}
+
+.table thead th {
+    border: none;
+    padding: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border);
+}
+
+.table tbody tr:hover {
+    background: var(--light);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===================================
+   Badges
+   =================================== */
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge.bg-success {
+    background: var(--success) !important;
+}
+
+.badge.bg-warning {
+    background: var(--warning) !important;
+}
+
+.badge.bg-danger {
+    background: var(--danger) !important;
+}
+
+/* ===================================
+   Alerts
+   =================================== */
+.alert {
+    border-radius: 12px;
+    border: none;
+    padding: 1.25rem 1.5rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    color: #075985;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+}
+
+/* ===================================
+   Modal Customization
+   =================================== */
+.modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    background: var(--dark);
+    color: white;
+    border-radius: 16px 16px 0 0;
+    padding: 1.5rem;
+    border-bottom: none;
+}
+
+.modal-title {
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem;
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+/* ===================================
+   Request Items
+   =================================== */
+.request-item {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.item-name {
+    flex: 1;
+}
+
+.item-qty {
+    max-width: 100px;
+}
+
+/* ===================================
+   Toast Notifications
+   =================================== */
+.toast {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+}
+
+.toast-header {
+    background: var(--dark);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+}
+
+.toast-body {
+    padding: 1rem;
+    font-weight: 500;
+}
+
+/* ===================================
+   Utility Classes
+   =================================== */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.text-danger {
+    color: var(--danger) !important;
+}
+
+/* ===================================
+   Responsive Design
+   =================================== */
+@media (max-width: 768px) {
+    .welcome-card,
+    .form-card,
+    .content-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    main {
+        padding: 1rem 0.5rem;
+    }
+    
+    .table thead {
+        font-size: 0.75rem;
+    }
+    
+    .table tbody td {
+        font-size: 0.875rem;
+        padding: 0.75rem;
+    }
+}
+
+/* ===================================
+   Empty State
+   =================================== */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+}
+
+.empty-state h5 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* ===================================
+   Profile Section
+   =================================== */
+.profile-info {
+    background: var(--light);
+    border-radius: 12px;
+    padding: 2rem;
+    border: 2px solid var(--border);
+}
+
+.profile-info h3 {
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    font-family: var(--font-mono);
+}
+
+.profile-row {
+    display: flex;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.profile-row:last-child {
+    border-bottom: none;
+}
+
+.profile-label {
+    font-weight: 700;
+    color: var(--dark);
+    min-width: 120px;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+}
+
+.profile-value {
+    color: var(--text);
+}
