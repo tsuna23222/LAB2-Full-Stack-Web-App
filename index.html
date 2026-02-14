@@ -53,5 +53,27 @@
             </div>
         </div>
     </nav>
+    <!-- Main Content Area -->
+    <main class="container-fluid">
+        
+        <!-- Home Page -->
+        <section id="home-page" class="page active">
+            <div class="welcome-container">
+                <div class="welcome-card">
+                    <h1 class="display-4">Welcome to Full-Stack App</h1>
+                    <p class="lead">A static prototype before backend integration. Simulates:</p>
+                    <ul class="feature-list">
+                        <li>Email registration + fake verification</li>
+                        <li>Login with JWT-like token simulation</li>
+                        <li>Role-based UI (Admin/User)</li>
+                        <li>CRUD for Employees, Departments, Requests</li>
+                    </ul>
+                    <div class="alert alert-info">
+                        <strong>⚠ Note:</strong> All data is stored in <code>localStorage</code>. Refresh to reset.
+                    </div>
+                    <button class="btn btn-primary btn-lg" onclick="navigateTo('#/register')">Get Started →</button>
+                </div>
+            </div>
+        </section>
 </body>
 </html>
