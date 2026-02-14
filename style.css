@@ -1,4 +1,3 @@
-
 /* ===================================
    CSS Variables & Root Settings
    =================================== */
@@ -41,7 +40,6 @@ body {
     position: relative;
 }
 
-/* Background decoration */
 body::before {
     content: '';
     position: fixed;
@@ -134,7 +132,7 @@ code {
 }
 
 /* ===================================
-   PAGE VISIBILITY SYSTEM
+   Page Visibility System
    =================================== */
 .page {
     display: none;
@@ -156,44 +154,28 @@ code {
     }
 }
 
-.page { display: none; }        
-.page.active { display: block; } 
-
- 
-
-
 /* ===================================
-   ROLE-BASED VISIBILITY
+   Role-Based Visibility
    =================================== */
-/* When NOT logged in, hide logged-in elements */
 body.not-authenticated .role-logged-in {
     display: none !important;
 }
 
-/* When logged in, hide logged-out elements */
 body.authenticated .role-logged-out {
     display: none !important;
 }
 
-/* Admin elements hidden by default */
 .role-admin {
     display: none !important;
 }
 
-/* Show admin elements when user is admin */
 body.is-admin .role-admin {
     display: block !important;
 }
 
-/* Special case for nav items */
 body.is-admin .nav-item.role-admin {
     display: list-item !important;
 }
-
-/* ===================================
-   INITIAL BODY CLASS
-   =================================== */
-/* You'll set this in HTML: <body class="not-authenticated"> */
 
 /* ===================================
    Card Components
@@ -267,7 +249,36 @@ body.is-admin .nav-item.role-admin {
 }
 
 /* ===================================
-   Buttons (Basic)
+   Forms
+   =================================== */
+.form-label {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-control,
+.form-select {
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--light);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    background: white;
+}
+
+/* ===================================
+   Buttons
    =================================== */
 .btn {
     padding: 0.75rem 1.5rem;
@@ -291,45 +302,76 @@ body.is-admin .nav-item.role-admin {
     box-shadow: var(--shadow);
 }
 
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-success:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.btn-secondary {
+    background: var(--dark-alt);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: var(--dark);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-outline-secondary {
+    border: 2px solid var(--dark-alt);
+    color: var(--dark-alt);
+    background: transparent;
+}
+
+.btn-outline-secondary:hover {
+    background: var(--dark-alt);
+    color: white;
+}
+
+.btn-outline-danger {
+    border: 2px solid var(--danger);
+    color: var(--danger);
+    background: transparent;
+}
+
+.btn-outline-danger:hover {
+    background: var(--danger);
+    color: white;
+}
+
 .btn-lg {
     padding: 1rem 2rem;
     font-size: 1.125rem;
 }
 
-/* ===================================
-   Alerts
-   =================================== */
-.alert {
-    border-radius: 12px;
-    border: none;
-    padding: 1.25rem 1.5rem;
-    font-weight: 500;
-    box-shadow: var(--shadow-sm);
-}
-
-.alert-info {
-    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-    color: #075985;
-}
-
-/* ===================================
-   Responsive Design
-   =================================== */
-@media (max-width: 768px) {
-    .welcome-card,
-    .form-card,
-    .content-card {
-        padding: 2rem 1.5rem;
-    }
-    
-    main {
-        padding: 1rem 0.5rem;
-    }
-}
-
-/* ===================================
-   Utility Classes
-   =================================== */
-.text-muted {
-    color: var(--text-muted) !important;
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
 }
