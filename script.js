@@ -1,137 +1,282 @@
-// Global variable for current user (will be used in later phases)
+// ===================================
+// Global Variables & Constants
+// ===================================
+const STORAGE_KEY = 'ipt_demo_v1';
 let currentUser = null;
+let requestModalInstance = null;
+
+// Database structure
+window.db = {
+    accounts: [],
+    departments: [],
+    employees: [],
+    requests: []
+};
 
 // ===================================
 // Initialization
 // ===================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Set brand name
-    document.getElementById('brandName').textContent = 'Full-Stack App (Your Name)';
-    
-    // Initialize routing
+    loadFromStorage();
+    initializeEventListeners();
+    checkAuthOnLoad();
     handleRouting();
     
-    // Listen for hash changes (URL navigation)
+    // Set brand name dynamically
+    document.getElementById('brandName').textContent = 'Full-Stack App Casinillo';
+    
+    // Initialize Bootstrap modal
+    const modalElement = document.getElementById('requestModal');
+    if (modalElement) {
+        requestModalInstance = new bootstrap.Modal(modalElement);
+    }
+});
+
+// ===================================
+// Event Listeners
+// ===================================
+function initializeEventListeners() {
+    // Hash change for routing
     window.addEventListener('hashchange', handleRouting);
     
-    // Set default hash if empty
-    if (!window.location.hash) {
-        window.location.hash = '#/';
+    // Register form
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
     }
-});
-// ===================================
-// Client-Side Routing
-// ===================================
-
-// Navigate to a specific route
-function navigateTo(hash) {
-    window.location.hash = hash;
+    
+    // Login form
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+    
+    // Verify email simulation
+    const simulateVerifyBtn = document.getElementById('simulateVerifyBtn');
+    if (simulateVerifyBtn) {
+        simulateVerifyBtn.addEventListener('click', handleEmailVerification);
+    }
+    
+    // Logout
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+    
+    // Employee form
+    const employeeForm = document.getElementById('employeeForm');
+    if (employeeForm) {
+        employeeForm.addEventListener('submit', handleEmployeeSubmit);
+    }
+    
+    // Department form
+    const departmentForm = document.getElementById('departmentForm');
+    if (departmentForm) {
+        departmentForm.addEventListener('submit', handleDepartmentSubmit);
+    }
+    
+    // Account form
+    const accountForm = document.getElementById('accountForm');
+    if (accountForm) {
+        accountForm.addEventListener('submit', handleAccountSubmit);
+    }
 }
 
-// Handle routing based on current hash
-function handleRouting() {
-    // Get current hash from URL (e.g., "#/login")
-    let hash = window.location.hash || '#/';
-    
-    // Remove the "#/" prefix to get the route name
-    const route = hash.replace('#/', '');
-    
-    console.log('Current route:', route); // For debugging
-    
-    // Hide all pages first
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-    
-    // Determine which page to show based on route
-    let pageId = '';
-    
-    switch(route) {
-        case '':
-        case '/':
-            pageId = 'home-page';
-            break;
-        case 'register':
-            pageId = 'register-page';
-            break;
-        case 'verify-email':
-            pageId = 'verify-email-page';
-            break;
-        case 'login':
-            pageId = 'login-page';
-            break;
-        case 'profile':
-            pageId = 'profile-page';
-            break;
-        case 'employees':
-            pageId = 'employees-page';
-            break;
-        case 'departments':
-            pageId = 'departments-page';
-            break;
-        case 'accounts':
-            pageId = 'accounts-page';
-            break;
-        case 'requests':
-            pageId = 'requests-page';
-            break;
-        default:
-            // If route doesn't exist, go to home
-            pageId = 'home-page';
-            console.log('Unknown route, redirecting to home');
+// ===================================
+// Local Storage Management
+// ===================================
+function loadFromStorage() {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            window.db = JSON.parse(stored);
+        } else {
+            seedInitialData();
+        }
+    } catch (error) {
+        console.error('Error loading from storage:', error);
+        seedInitialData();
     }
+}
+
+function saveToStorage() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(window.db));
+    } catch (error) {
+        console.error('Error saving to storage:', error);
+        showToast('Error saving data', 'danger');
+    }
+}
+
+function seedInitialData() {
+    window.db = {
+        accounts: [
+            {
+                id: generateId(),
+                firstName: 'Admin',
+                lastName: 'User',
+                email: 'admin@example.com',
+                password: 'Password123!',
+                role: 'Admin',
+                verified: true
+            }
+        ],
+        departments: [
+            {
+                id: generateId(),
+                name: 'Engineering',
+                description: 'Software development team'
+            },
+            {
+                id: generateId(),
+                name: 'HR',
+                description: 'Human Resources'
+            }
+        ],
+        employees: [],
+        requests: []
+    };
+    saveToStorage();
+}
+
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+// ===================================
+// Authentication System
+// ===================================
+function checkAuthOnLoad() {
+    const authToken = localStorage.getItem('auth_token');
+    if (authToken) {
+        const user = window.db.accounts.find(acc => acc.email === authToken && acc.verified);
+        if (user) {
+            setAuthState(true, user);
+        } else {
+            localStorage.removeItem('auth_token');
+        }
+    }
+}
+
+function setAuthState(isAuth, user = null) {
+    currentUser = user;
+    const body = document.body;
     
-    // Show the target page
-    const targetPage = document.getElementById(pageId);
-    if (targetPage) {
-        targetPage.classList.add('active');
-        console.log('Showing page:', pageId);
+    if (isAuth && user) {
+        body.classList.remove('not-authenticated');
+        body.classList.add('authenticated');
+        
+        if (user.role === 'Admin') {
+            body.classList.add('is-admin');
+        } else {
+            body.classList.remove('is-admin');
+        }
+        
+        // Update username display
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        if (usernameDisplay) {
+            usernameDisplay.textContent = user.firstName + ' ' + user.lastName;
+        }
     } else {
-        console.error('Page not found:', pageId);
+        body.classList.remove('authenticated', 'is-admin');
+        body.classList.add('not-authenticated');
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Code runs when HTML is fully loaded
-});
-
-window.addEventListener('hashchange', handleRouting);
-
-function handleRouting() {
-    // 1. Get the hash
-    let hash = window.location.hash;  // "#/login"
+function handleRegister(e) {
+    e.preventDefault();
     
-    // 2. Remove "#/" to get route name
-    const route = hash.replace('#/', '');  // "login"
+    const firstName = document.getElementById('regFirstName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
+    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+    const password = document.getElementById('regPassword').value;
     
-    // 3. Hide ALL pages
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-    
-    // 4. Decide which page to show
-    let pageId = '';
-    if (route === 'login') {
-        pageId = 'login-page';
-    } else if (route === 'register') {
-        pageId = 'register-page';
+    // Validate
+    if (password.length < 6) {
+        showToast('Password must be at least 6 characters', 'danger');
+        return;
     }
-    // ... etc
     
-    // 5. Show the target page
-    document.getElementById(pageId).classList.add('active');
+    // Check if email exists
+    const existingUser = window.db.accounts.find(acc => acc.email === email);
+    if (existingUser) {
+        showToast('Email already registered', 'danger');
+        return;
+    }
+    
+    // Create new account
+    const newAccount = {
+        id: generateId(),
+        firstName,
+        lastName,
+        email,
+        password,
+        role: 'User',
+        verified: false
+    };
+    
+    window.db.accounts.push(newAccount);
+    saveToStorage();
+    
+    // Store unverified email
+    localStorage.setItem('unverified_email', email);
+    
+    showToast('Account created! Please verify your email.', 'success');
+    navigateTo('#/verify-email');
 }
 
-
-if (route === 'login') {
-    pageId = 'login-page';
-} else if (route === 'register') {
-    pageId = 'register-page';
-} else if (route === 'profile') {
-    pageId = 'profile-page';
+function handleEmailVerification() {
+    const email = localStorage.getItem('unverified_email');
+    if (!email) {
+        showToast('No pending verification', 'warning');
+        return;
+    }
+    
+    const account = window.db.accounts.find(acc => acc.email === email);
+    if (account) {
+        account.verified = true;
+        saveToStorage();
+        localStorage.removeItem('unverified_email');
+        
+        showToast('Email verified successfully!', 'success');
+        
+        // Show success message on login page
+        setTimeout(() => {
+            navigateTo('#/login');
+            const loginSuccess = document.getElementById('loginSuccess');
+            if (loginSuccess) {
+                loginSuccess.style.display = 'block';
+            }
+        }, 500);
+    }
 }
-page.classList.remove('active'); 
-page.classList.add('active'); 
 
-getComputedStyle(document.querySelector('.page.active')).display
-document.getElementById('home-page').classList.add('active');
+function handleLogin(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+    
+    const user = window.db.accounts.find(acc => 
+        acc.email === email && 
+        acc.password === password && 
+        acc.verified === true
+    );
+    
+    if (user) {
+        localStorage.setItem('auth_token', email);
+        setAuthState(true, user);
+        showToast(`Welcome back, ${user.firstName}!`, 'success');
+        navigateTo('#/profile');
+    } else {
+        showToast('Invalid credentials or email not verified', 'danger');
+    }
+}
+
+function handleLogout(e) {
+    e.preventDefault();
+    localStorage.removeItem('auth_token');
+    setAuthState(false);
+    showToast('Logged out successfully', 'success');
+    navigateTo('#/');
+}
