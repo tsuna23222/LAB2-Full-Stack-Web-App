@@ -1,225 +1,147 @@
 // ===================================
-// Global Variables & Constants
+// PHASE 1: CORE STRUCTURE & NAVIGATION
 // ===================================
-const STORAGE_KEY = 'ipt_demo_v1';
-let currentUser = null;
-let requestModalInstance = null;
 
-// Database structure
-window.db = {
-    accounts: [],
-    departments: [],
-    employees: [],
-    requests: []
-};
+// Global variable for current user (will be used in later phases)
+let currentUser = null;
 
 // ===================================
 // Initialization
 // ===================================
 document.addEventListener('DOMContentLoaded', function() {
-    loadFromStorage();
-    initializeEventListeners();
-    checkAuthOnLoad();
+    // Set brand name
+    document.getElementById('brandName').textContent = 'Full-Stack App (Your Name)';
+    
+    // Initialize routing
     handleRouting();
     
-    // Set brand name dynamically
-    document.getElementById('brandName').textContent = 'Full-Stack App Casinillo';
+    // Listen for hash changes (URL navigation)
+    window.addEventListener('hashchange', handleRouting);
     
-    // Initialize Bootstrap modal
-    const modalElement = document.getElementById('requestModal');
-    if (modalElement) {
-        requestModalInstance = new bootstrap.Modal(modalElement);
+    // Set default hash if empty
+    if (!window.location.hash) {
+        window.location.hash = '#/';
     }
 });
 
 // ===================================
-// Event Listeners
+// Client-Side Routing
 // ===================================
-function initializeEventListeners() {
-    // Hash change for routing
-    window.addEventListener('hashchange', handleRouting);
-    
-    // Register form
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', handleRegister);
-    }
-    
-    // Login form
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-    
-    // Verify email simulation
-    const simulateVerifyBtn = document.getElementById('simulateVerifyBtn');
-    if (simulateVerifyBtn) {
-        simulateVerifyBtn.addEventListener('click', handleEmailVerification);
-    }
-    
-    // Logout
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', handleLogout);
-    }
-    
-    // Employee form
-    const employeeForm = document.getElementById('employeeForm');
-    if (employeeForm) {
-        employeeForm.addEventListener('submit', handleEmployeeSubmit);
-    }
-    
-    // Department form
-    const departmentForm = document.getElementById('departmentForm');
-    if (departmentForm) {
-        departmentForm.addEventListener('submit', handleDepartmentSubmit);
-    }
-    
-    // Account form
-    const accountForm = document.getElementById('accountForm');
-    if (accountForm) {
-        accountForm.addEventListener('submit', handleAccountSubmit);
-    }
-}
-// ===================================
-// Local Storage Management
-// ===================================
-function loadFromStorage() {
-    try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-            window.db = JSON.parse(stored);
-        } else {
-            seedInitialData();
-        }
-    } catch (error) {
-        console.error('Error loading from storage:', error);
-        seedInitialData();
-    }
+
+// Navigate to a specific route
+function navigateTo(hash) {
+    window.location.hash = hash;
 }
 
-function saveToStorage() {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(window.db));
-    } catch (error) {
-        console.error('Error saving to storage:', error);
-        showToast('Error saving data', 'danger');
-    }
-}
-
-function seedInitialData() {
-    window.db = {
-        accounts: [
-            {
-                id: generateId(),
-                firstName: 'Admin',
-                lastName: 'User',
-                email: 'admin@example.com',
-                password: 'Password123!',
-                role: 'Admin',
-                verified: true
-            }
-        ],
-        departments: [
-            {
-                id: generateId(),
-                name: 'Engineering',
-                description: 'Software development team'
-            },
-            {
-                id: generateId(),
-                name: 'HR',
-                description: 'Human Resources'
-            }
-        ],
-        employees: [],
-        requests: []
-    };
-    saveToStorage();
-}
-
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
-}
-
-// ===================================
-// Authentication System
-// ===================================
-function checkAuthOnLoad() {
-    const authToken = localStorage.getItem('auth_token');
-    if (authToken) {
-        const user = window.db.accounts.find(acc => acc.email === authToken && acc.verified);
-        if (user) {
-            setAuthState(true, user);
-        } else {
-            localStorage.removeItem('auth_token');
-        }
-    }
-}
-
-function setAuthState(isAuth, user = null) {
-    currentUser = user;
-    const body = document.body;
+// Handle routing based on current hash
+function handleRouting() {
+    // Get current hash from URL (e.g., "#/login")
+    let hash = window.location.hash || '#/';
     
-    if (isAuth && user) {
-        body.classList.remove('not-authenticated');
-        body.classList.add('authenticated');
-        
-        if (user.role === 'Admin') {
-            body.classList.add('is-admin');
-        } else {
-            body.classList.remove('is-admin');
-        }
-        
-        // Update username display
-        const usernameDisplay = document.getElementById('usernameDisplay');
-        if (usernameDisplay) {
-            usernameDisplay.textContent = user.firstName + ' ' + user.lastName;
-        }
+    // Remove the "#/" prefix to get the route name
+    const route = hash.replace('#/', '');
+    
+    console.log('Current route:', route); // For debugging
+    
+    // Hide all pages first
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // Determine which page to show based on route
+    let pageId = '';
+    
+    switch(route) {
+        case '':
+        case '/':
+            pageId = 'home-page';
+            break;
+        case 'register':
+            pageId = 'register-page';
+            break;
+        case 'verify-email':
+            pageId = 'verify-email-page';
+            break;
+        case 'login':
+            pageId = 'login-page';
+            break;
+        case 'profile':
+            pageId = 'profile-page';
+            break;
+        case 'employees':
+            pageId = 'employees-page';
+            break;
+        case 'departments':
+            pageId = 'departments-page';
+            break;
+        case 'accounts':
+            pageId = 'accounts-page';
+            break;
+        case 'requests':
+            pageId = 'requests-page';
+            break;
+        default:
+            // If route doesn't exist, go to home
+            pageId = 'home-page';
+            console.log('Unknown route, redirecting to home');
+    }
+    
+    // Show the target page
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.add('active');
+        console.log('Showing page:', pageId);
     } else {
-        body.classList.remove('authenticated', 'is-admin');
-        body.classList.add('not-authenticated');
+        console.error('Page not found:', pageId);
     }
 }
 
-function handleRegister(e) {
-    e.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+    // Code runs when HTML is fully loaded
+});
+
+window.addEventListener('hashchange', handleRouting);
+
+function handleRouting() {
+    // 1. Get the hash
+    let hash = window.location.hash;  // "#/login"
     
-    const firstName = document.getElementById('regFirstName').value.trim();
-    const lastName = document.getElementById('regLastName').value.trim();
-    const email = document.getElementById('regEmail').value.trim().toLowerCase();
-    const password = document.getElementById('regPassword').value;
+    // 2. Remove "#/" to get route name
+    const route = hash.replace('#/', '');  // "login"
     
-    // Validate
-    if (password.length < 6) {
-        showToast('Password must be at least 6 characters', 'danger');
-        return;
+    // 3. Hide ALL pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // 4. Decide which page to show
+    let pageId = '';
+    if (route === 'login') {
+        pageId = 'login-page';
+    } else if (route === 'register') {
+        pageId = 'register-page';
     }
+    // ... etc
     
-    // Check if email exists
-    const existingUser = window.db.accounts.find(acc => acc.email === email);
-    if (existingUser) {
-        showToast('Email already registered', 'danger');
-        return;
-    }
-    
-    // Create new account
-    const newAccount = {
-        id: generateId(),
-        firstName,
-        lastName,
-        email,
-        password,
-        role: 'User',
-        verified: false
-    };
-    
-    window.db.accounts.push(newAccount);
-    saveToStorage();
-    
-    // Store unverified email
-    localStorage.setItem('unverified_email', email);
-    
-    showToast('Account created! Please verify your email.', 'success');
-    navigateTo('#/verify-email');
+    // 5. Show the target page
+    document.getElementById(pageId).classList.add('active');
 }
+
+switch(route) {
+    case 'login':
+        pageId = 'login-page';
+        break;
+    case 'register':
+        pageId = 'register-page';
+        break;
+    default:
+        pageId = 'home-page';
+}
+if (route === 'login') {
+    pageId = 'login-page';
+} else if (route === 'register') {
+    pageId = 'register-page';
+} else if (route === 'profile') {
+    pageId = 'profile-page';
+}
+// ... gets messy!
