@@ -388,7 +388,7 @@ function renderProfile() {
 
 // ✅ Fetch admin dashboard from backend (Step 2 example)
 async function loadAdminDashboard() {
-    const res = await fetch(`${API}/api/admin/dashboard`, {
+    const res = await fetch(`http://localhost:3000/api/admin/dashboard`, {
         headers: getAuthHeader()
     });
     if (res.ok) {
